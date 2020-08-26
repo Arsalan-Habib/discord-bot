@@ -17,22 +17,39 @@ client.on("ready", () => {
 });
 client.on("message", async (message) => {
     if (!message.author.bot) {
+        if (message.content.includes("fortnite", "Fortnite")) {
+            message.guild
+                .member(message.author.id)
+                .kick("Fornite isnt allowed here.")
+                .then((member) => {
+                    message.channel.send(`${member.user.username} was kicked.`);
+                })
+                .catch((err) => {
+                    console.log(err);
+                    message.channel.send(
+                        `I don't have permissions to kick ${message.author.username} :(`
+                    );
+                });
+        }
+
+        // Commands
         if (message.content.startsWith(PREFIX)) {
             const [CMD_NAME, ...args] = message.content
                 .trim()
                 .substring(PREFIX.length)
                 .split(/\s+/);
+            const user = message.mentions.users.first();
+            const member = message.guild.member(user);
+            console.log(user);
 
-            console.log(CMD_NAME);
             if (CMD_NAME === "kick") {
                 if (!message.member.hasPermission("KICK_MEMBERS"))
                     return message.reply(
                         "You don't have permission to use that command."
                     );
                 if (args.length === 0)
-                    return message.reply("Please provide an ID.");
+                    return message.reply("Please mention the member.");
 
-                const member = message.guild.members.cache.get(args[0]);
                 if (member) {
                     member
                         .kick()
@@ -56,9 +73,9 @@ client.on("message", async (message) => {
                     return message.reply("Please provide an ID.");
 
                 try {
-                    const user = await message.guild.members.ban(args[0]);
+                    await message.guild.members.ban(user);
                     message.channel.send(
-                        `${user.username} was banned successfully.`
+                        `${user.username} was banned from the server.`
                     );
                 } catch (err) {
                     console.log(err);

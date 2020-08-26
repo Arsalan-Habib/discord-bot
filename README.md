@@ -1,5 +1,5 @@
 # discord-bot
-A discord bot for helping manage channels.
+DESC: A discord bot for helping manage channels.
 
 A small discord bot built on node-js using the dicord.js library.
 
